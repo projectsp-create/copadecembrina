@@ -1,4 +1,4 @@
-import { sb, esc, sincronizarHora, segundos, minuto, mmss, fmtFecha, fmtHora, desdeLocal, aLocal, PERIODOS, FASES, ganador, perdedor, agruparTabla, ICONOS, iconoJugada, TEXTO_JUGADA, aviso, debounce, explicarError } from './comun.js?v=1.3';
+import { sb, esc, sincronizarHora, segundos, minuto, mmss, fmtFecha, fmtHora, desdeLocal, aLocal, PERIODOS, FASES, ganador, perdedor, agruparTabla, ICONOS, iconoJugada, TEXTO_JUGADA, aviso, debounce, explicarError } from './comun.js?v=1.4';
 
 const $vista = document.getElementById('vista');
 const $nav = document.getElementById('nav');
@@ -73,7 +73,7 @@ function pintarLogin() {
   $vista.innerHTML = `
   <section class="tarjeta destacada login">
     <span class="marca">Copa Decembrina</span>
-    <div class="lider" style="background:var(--acento);border:none;padding:14px;border-radius:18px;color:var(--fondo)">${ICONOS.pito}</div>
+    <div class="lider" style="background:var(--acento);border:none;padding:14px;border-radius:18px;color:#FFFFFF">${ICONOS.pito}</div>
     <h1>Acceso planillero</h1>
     <p class="sub">Solo el dueño y los administradores autorizados. El público ve todo sin iniciar sesión.</p>
     <form id="formLogin" style="width:100%;display:flex;flex-direction:column;gap:12px;text-align:left">
@@ -171,7 +171,7 @@ function vPlanillero() {
         <b data-reloj-admin style="color:${corriendo ? 'var(--texto)' : 'var(--gris)'}">${mmss(p)}</b>
         ${p.estado === 'programado'
           ? '<button class="btn primario chico" data-accion="reloj" data-a="iniciar">Iniciar partido</button>'
-          : fin ? '<span class="chip" style="background:#172133;color:#C9D2E0">FINALIZADO</span>'
+          : fin ? '<span class="chip" style="background:#E8EEF5;color:#33475E">FINALIZADO</span>'
           : `<button class="btn chico ${corriendo ? '' : 'primario'}" data-accion="reloj" data-a="${corriendo ? 'pausar' : 'iniciar'}">${corriendo ? 'Pausar' : 'Reanudar'}</button>`}
       </span>
       <span class="eq">${esc(nom(p.visita_id))}<b>${p.goles_visita}</b></span>

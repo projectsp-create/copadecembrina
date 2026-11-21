@@ -1,4 +1,4 @@
-# Copa Decembrina de Hinchas · Tesalia · versión 1.3
+# Copa Decembrina de Hinchas · Tesalia · versión 1.4
 
 Web en vivo de la Copa (marcador con minuto, goles con autor, tarjetas, tabla, goleadores y llaves) y panel de administración para el planillero.
 
@@ -103,7 +103,7 @@ Estas reglas las aplica la base de datos (RLS). Aunque alguien modifique la pág
 ```
 index.html              Página pública
 admin.html              Panel de administración
-css/estilos.css         Colores y estilos (azul noche + cian)
+css/estilos.css         Colores y estilos (blanco + azules)
 js/config.js            ← Aquí van la URL y la anon key de Supabase
 js/comun.js             Conexión y utilidades
 js/publico.js           Lógica de la página pública

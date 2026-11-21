@@ -1,4 +1,4 @@
-import { sb, esc, sincronizarHora, minuto, esHoy, fmtHora, fmtFecha, PERIODOS, ganador, agruparTabla, ICONOS, iconoJugada, TEXTO_JUGADA, debounce, aviso, explicarError } from './comun.js?v=1.3';
+import { sb, esc, sincronizarHora, minuto, esHoy, fmtHora, fmtFecha, PERIODOS, ganador, agruparTabla, ICONOS, iconoJugada, TEXTO_JUGADA, debounce, aviso, explicarError } from './comun.js?v=1.4';
 
 const D = { config: null, equipos: new Map(), partidos: [], tabla: [], goleadores: [], eventos: [], destacado: null };
 const $vista = document.getElementById('vista');
@@ -87,7 +87,7 @@ function vVivo() {
     const vivo = p.estado === 'en_juego';
     const chip = vivo
       ? '<span class="chip"><span class="punto vivo"></span>EN VIVO</span>'
-      : p.estado === 'finalizado' ? '<span class="chip" style="background:#172133;color:#C9D2E0">FINALIZADO</span>' : '<span class="chip">PRÓXIMO</span>';
+      : p.estado === 'finalizado' ? '<span class="chip" style="background:#E8EEF5;color:#33475E">FINALIZADO</span>' : '<span class="chip">PRÓXIMO</span>';
     const goles = D.eventos.filter((e) => e.tipo === 'gol' || e.tipo === 'autogol').reverse();
     const autor = (e) => `${esc(e.copa_jugadores?.nombre || 'Jugador')}${e.tipo === 'autogol' ? ' (a.g.)' : ''} ${e.minuto}'`;
     const aFavor = (e, lado) => (e.tipo === 'gol' ? e.equipo_id === lado : e.equipo_id !== lado);
@@ -199,7 +199,7 @@ function vLlaves() {
   }
   if (tercero) html += `<section class="seccion" aria-label="Tercer puesto"><h3 style="color:var(--gris)">Tercer puesto</h3>${cruce(tercero)}</section>`;
   const campeon = final ? ganador(final) : null;
-  html += `<section class="campeon" aria-label="Campeón"><div class="copa" style="width:72px;height:72px;border-radius:20px;background:var(--acento);color:var(--fondo);display:flex;align-items:center;justify-content:center">${ICONOS.copa}</div>
+  html += `<section class="campeon" aria-label="Campeón"><div class="copa" style="width:72px;height:72px;border-radius:20px;background:var(--acento);color:#FFFFFF;display:flex;align-items:center;justify-content:center">${ICONOS.copa}</div>
     <span style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--acento)">CAMPEÓN</span>
     <span style="font-family:var(--titulo);font-weight:800;font-size:30px;text-transform:uppercase;color:${campeon ? 'var(--texto)' : 'var(--apagado)'}">${campeon ? esc(nombre(campeon)) : 'Por definir'}</span></section>`;
   return '<div class="llaves-wrap">' + html + '</div>';

@@ -1,5 +1,5 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js?v=1.3';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js?v=1.4';
 
 if (!SUPABASE_URL || SUPABASE_URL.includes('TU-PROYECTO') || !SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes('PEGA_AQUI')) {
   throw new Error('Falta poner la URL y la key de Supabase en js/config.js (en GitHub).');
