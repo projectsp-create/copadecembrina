@@ -1,4 +1,4 @@
-import { sb, esc, sincronizarHora, segundos, minuto, mmss, fmtFecha, fmtHora, desdeLocal, aLocal, PERIODOS, FASES, ganador, perdedor, agruparTabla, ICONOS, iconoJugada, TEXTO_JUGADA, aviso, debounce } from './comun.js';
+import { sb, esc, sincronizarHora, segundos, minuto, mmss, fmtFecha, fmtHora, desdeLocal, aLocal, PERIODOS, FASES, ganador, perdedor, agruparTabla, ICONOS, iconoJugada, TEXTO_JUGADA, aviso, debounce, explicarError } from './comun.js?v=3';
 
 const $vista = document.getElementById('vista');
 const $nav = document.getElementById('nav');
@@ -39,7 +39,7 @@ function traducirError(e) {
   const m = e.message || String(e);
   if (/row-level security|permission|permiso/i.test(m)) return 'No tienes permiso para hacer eso.';
   if (/duplicate key/i.test(m)) return 'Ese registro ya existe.';
-  return m;
+  return explicarError(e);
 }
 
 // ---------- Sesión ----------
@@ -58,7 +58,8 @@ async function iniciar() {
 async function arrancar() {
   if (!A.session) return pintarLogin();
   const email = A.session.user.email.toLowerCase();
-  const { data } = await sb.from('copa_admins').select('*').eq('email', email).maybeSingle();
+  const { data, error } = await sb.from('copa_admins').select('*').eq('email', email).maybeSingle();
+  if (error) { $vista.innerHTML = `<section class="tarjeta" style="padding:18px"><h2 style="color:var(--roja-texto)">No se pudo cargar</h2><p class="sub" style="margin-top:8px">${esc(explicarError(error))}</p><button class="btn ancho" style="margin-top:12px" data-accion="salir">Salir</button></section>`; return; }
   A.yo = data;
   if (!A.yo) return pintarNoAutorizado(email);
   A.tab = A.tab || TABS.find((t) => t.ok())?.id;
@@ -74,10 +75,12 @@ function pintarLogin() {
     <span class="marca">Copa Decembrina</span>
     <div class="lider" style="background:var(--acento);border:none;padding:14px;border-radius:18px;color:var(--fondo)">${ICONOS.pito}</div>
     <h1>Acceso planillero</h1>
-    <p class="sub">Solo el dueño y los administradores autorizados pueden cargar resultados. El público ve todo sin iniciar sesión.</p>
-    <button class="btn-google" data-accion="login">
-      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.6a4.8 4.8 0 01-2.1 3.1v2.6h3.4c2-1.8 3.1-4.5 3.1-7.5z"/><path fill="#34A853" d="M12 22c2.8 0 5.2-.9 6.9-2.5l-3.4-2.6c-.9.6-2.1 1-3.5 1-2.7 0-5-1.8-5.8-4.3H2.7v2.7A10 10 0 0012 22z"/><path fill="#FBBC05" d="M6.2 13.6a6 6 0 010-3.2V7.7H2.7a10 10 0 000 8.6z"/><path fill="#EA4335" d="M12 5.9c1.5 0 2.9.5 4 1.6l3-3A10 10 0 002.7 7.7l3.5 2.7C7 7.8 9.3 5.9 12 5.9z"/></svg>
-      Ingresar con Google</button>
+    <p class="sub">Solo el dueño y los administradores autorizados. El público ve todo sin iniciar sesión.</p>
+    <form id="formLogin" style="width:100%;display:flex;flex-direction:column;gap:12px;text-align:left">
+      <div class="campo"><label for="lgEmail">Correo</label><input id="lgEmail" class="input" type="email" autocomplete="username" required></div>
+      <div class="campo"><label for="lgClave">Contraseña</label><input id="lgClave" class="input" type="password" autocomplete="current-password" required></div>
+      <button class="btn primario ancho" type="submit" style="min-height:52px">Entrar</button>
+    </form>
     <a href="./" class="nota">Ir a la página pública</a>
   </section>`;
 }
@@ -130,7 +133,13 @@ function pintar() {
   $nav.classList.remove('oculto');
   $nav.style.setProperty('--cols', tabs.length);
   $nav.innerHTML = tabs.map((t) => `<button data-accion="tab" data-id="${t.id}" class="${A.tab === t.id ? 'activo' : ''}" ${A.tab === t.id ? 'aria-current="page"' : ''}>${ICONOS[t.ic]}${t.label}</button>`).join('');
-  const cab = `<div class="usuario"><span class="avatar">${esc(iniciales(A.yo.nombre))}</span><span class="datos">${esc(A.yo.nombre)}<small>${esDueno() ? 'Dueño' : 'Administrador'}</small></span><a class="btn chico" href="./" target="_blank" rel="noopener">Ver web</a><button class="btn chico" data-accion="salir">Salir</button></div>`;
+  const cab = `<div class="usuario"><span class="avatar">${esc(iniciales(A.yo.nombre))}</span><span class="datos">${esc(A.yo.nombre)}<small>${esDueno() ? 'Dueño' : 'Administrador'}</small></span><a class="btn chico" href="./" target="_blank" rel="noopener">Ver web</a><button class="btn chico" data-accion="salir">Salir</button></div>
+  <details class="tarjeta"><summary style="cursor:pointer;padding:12px 14px;font-size:13px;color:var(--gris)">Cambiar mi contraseña</summary>
+    <form id="formClave" style="padding:0 14px 14px;display:flex;flex-direction:column;gap:10px">
+      <div class="campo"><label for="nvClave">Nueva contraseña</label><input id="nvClave" class="input" type="password" autocomplete="new-password"></div>
+      <div class="campo"><label for="nvClave2">Repítela</label><input id="nvClave2" class="input" type="password" autocomplete="new-password"></div>
+      <button class="btn primario" type="submit">Guardar contraseña</button>
+    </form></details>`;
   const cuerpo = { planillero: vPlanillero, equipos: vEquipos, partidos: vPartidos, admins: vAdmins }[A.tab]?.() || '';
   $vista.innerHTML = cab + cuerpo;
   tic();
@@ -342,7 +351,7 @@ const PERMISOS = [
   ['puede_corregir_cerrados', 'Corregir partidos cerrados']
 ];
 function vAdmins() {
-  let h = `<section class="seccion"><h2>Quién puede administrar</h2><p class="nota">Solo tú, como dueño, puedes agregar, quitar y cambiar permisos. Cada persona entra con su cuenta de Google.</p><div class="tarjeta"><ul class="lista-admin">`;
+  let h = `<section class="seccion"><h2>Quién puede administrar</h2><p class="nota">Solo tú, como dueño, puedes agregar, quitar y cambiar permisos. Primero crea su usuario en Supabase (Authentication → Users → Add user) y luego agrégalo aquí con el mismo correo.</p><div class="tarjeta"><ul class="lista-admin">`;
   h += A.admins.map((a) => `<li>
     <div class="cabeza"><span class="avatar ${a.rol === 'dueno' ? '' : 'gris'}">${esc(iniciales(a.nombre))}</span><span class="datos">${esc(a.nombre)}<small>${esc(a.email)}</small></span>
       ${a.rol === 'dueno' ? '<span class="etiqueta-rol">Dueño</span>' : `<button class="btn chico peligro" data-accion="quitarAdmin" data-email="${esc(a.email)}">Quitar</button>`}</div>
@@ -350,7 +359,7 @@ function vAdmins() {
   </li>`).join('');
   h += `</ul></div></section>
   <section class="tarjeta pad seccion" aria-label="Agregar administrador"><h2>Agregar administrador</h2>
-    <div class="campo"><label for="adEmail">Correo de Google</label><input id="adEmail" class="input" type="email" placeholder="nombre@gmail.com" autocomplete="off"></div>
+    <div class="campo"><label for="adEmail">Correo (el mismo del usuario creado en Supabase)</label><input id="adEmail" class="input" type="email" placeholder="nombre@gmail.com" autocomplete="off"></div>
     <div class="campo"><label for="adNombre">Nombre</label><input id="adNombre" class="input" placeholder="Nombre para mostrar"></div>
     <div class="permisos">${PERMISOS.map(([k, t], i) => `<label class="check"><input type="checkbox" id="adP${i}" data-campo="${k}" ${i < 2 ? 'checked' : ''}>${t}</label>`).join('')}</div>
     <button class="btn primario" data-accion="agregarAdmin">Agregar</button></section>`;
@@ -386,7 +395,6 @@ function roundRobin(ids) {
 }
 
 const ACCIONES = {
-  login: () => sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname } }),
   salir: async () => { await sb.auth.signOut(); A.yo = null; pintarLogin(); },
   tab: (b) => { A.tab = b.dataset.id; pintar(); window.scrollTo(0, 0); },
 
@@ -574,6 +582,23 @@ const CAMBIOS = {
     if (!(await q(sb.from('copa_admins').update({ [el.dataset.campo]: el.checked }).eq('email', el.dataset.email), 'Permiso actualizado'))) el.checked = !el.checked;
   }
 };
+
+document.addEventListener('submit', async (ev) => {
+  if (ev.target.id === 'formLogin') {
+    ev.preventDefault();
+    const btn = ev.target.querySelector('button');
+    btn.disabled = true; btn.textContent = 'Entrando…';
+    const { error } = await sb.auth.signInWithPassword({ email: val('lgEmail').toLowerCase(), password: document.getElementById('lgClave').value });
+    if (error) { aviso(/invalid/i.test(error.message) ? 'Correo o contraseña incorrectos' : error.message, true); btn.disabled = false; btn.textContent = 'Entrar'; }
+  }
+  if (ev.target.id === 'formClave') {
+    ev.preventDefault();
+    const c1 = document.getElementById('nvClave').value, c2 = document.getElementById('nvClave2').value;
+    if (c1.length < 8) return aviso('Mínimo 8 caracteres', true);
+    if (c1 !== c2) return aviso('Las contraseñas no coinciden', true);
+    if (await q(sb.auth.updateUser({ password: c1 }), 'Contraseña cambiada')) ev.target.reset();
+  }
+});
 
 document.addEventListener('click', (ev) => {
   const b = ev.target.closest('[data-accion]');

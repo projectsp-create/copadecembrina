@@ -1,4 +1,4 @@
-import { sb, esc, sincronizarHora, minuto, esHoy, fmtHora, fmtFecha, PERIODOS, ganador, agruparTabla, ICONOS, iconoJugada, TEXTO_JUGADA, debounce, aviso } from './comun.js';
+import { sb, esc, sincronizarHora, minuto, esHoy, fmtHora, fmtFecha, PERIODOS, ganador, agruparTabla, ICONOS, iconoJugada, TEXTO_JUGADA, debounce, aviso, explicarError } from './comun.js?v=3';
 
 const D = { config: null, equipos: new Map(), partidos: [], tabla: [], goleadores: [], eventos: [], destacado: null };
 const $vista = document.getElementById('vista');
@@ -30,6 +30,9 @@ function elegirDestacado(idPedido) {
 }
 
 async function cargar() {
+  try { await cargarDatos(); } catch (e) { $vista.innerHTML = `<section class="tarjeta" style="padding:18px"><h2 style="color:var(--roja-texto)">No se pudo cargar</h2><p class="sub" style="margin-top:8px">${esc(explicarError(e))}</p></section>`; }
+}
+async function cargarDatos() {
   const [cfg, eq, pa, ta, go] = await Promise.all([
     sb.from('copa_config').select('*').eq('id', 1).maybeSingle(),
     sb.from('copa_equipos').select('id,nombre,corto,grupo'),
@@ -38,7 +41,7 @@ async function cargar() {
     sb.from('copa_goleadores').select('*').order('goles', { ascending: false }).order('nombre').limit(15)
   ]);
   const err = [cfg, eq, pa, ta, go].find((x) => x.error);
-  if (err) { $vista.innerHTML = `<p class="vacio">No se pudo cargar la información. Revisa la conexión.<br><small>${esc(err.error.message)}</small></p>`; return; }
+  if (err) { $vista.innerHTML = `<section class="tarjeta" style="padding:18px"><h2 style="color:var(--roja-texto)">No se pudo cargar</h2><p class="sub" style="margin-top:8px">${esc(explicarError(err.error))}</p></section>`; return; }
   D.config = cfg.data;
   D.equipos = new Map(eq.data.map((e) => [e.id, e]));
   D.partidos = pa.data;
@@ -77,7 +80,7 @@ function etiquetaPartido(p) {
 
 function vVivo() {
   const p = D.destacado;
-  let html = '';
+  let html = '<div class="dos-col"><div class="col">';
   if (!p) {
     html += '<section class="tarjeta destacada"><p class="vacio">Aún no hay partidos en juego. Revisa la programación abajo.</p></section>';
   } else {
@@ -114,6 +117,7 @@ function vVivo() {
     html += '</section>';
   }
 
+  html += '</div><div class="col">';
   const prox = D.partidos.filter((x) => x.estado === 'programado' && (!p || x.id !== p.id)).slice(0, 6);
   html += '<section class="seccion" aria-label="Programación"><h2>Programación</h2>';
   html += prox.length ? '<div class="seccion">' + prox.map(filaPartido).join('') + '</div>' : '<p class="nota">No hay más partidos programados.</p>';
@@ -121,7 +125,7 @@ function vVivo() {
 
   const res = D.partidos.filter((x) => x.estado === 'finalizado' && (!p || x.id !== p.id)).sort((a, b) => new Date(b.actualizado_en) - new Date(a.actualizado_en)).slice(0, 8);
   if (res.length) html += '<section class="seccion" aria-label="Resultados"><h2>Resultados</h2><div class="seccion">' + res.map(filaPartido).join('') + '</div></section>';
-  return html;
+  return html + '</div></div>';
 }
 
 function filaPartido(p) {
@@ -144,6 +148,7 @@ function vPosiciones() {
   const grupos = agruparTabla(D.tabla);
   let html = `<p class="nota">Pasan los ${n} primeros de cada grupo. La tabla se actualiza al pitazo final de cada partido.</p>`;
   if (!grupos.length) html += '<section class="tarjeta"><p class="vacio">Aún no hay equipos con grupo asignado.</p></section>';
+  html += '<div class="grupos-grid">';
   grupos.forEach(({ grupo, filas }) => {
     const enJuego = D.partidos.filter((p) => p.fase === 'grupos' && p.grupo === grupo && p.estado === 'en_juego').length;
     html += `<section class="tarjeta" style="overflow:hidden">
@@ -153,7 +158,7 @@ function vPosiciones() {
         <td>${f.pj}</td><td>${f.g}</td><td>${f.e}</td><td>${f.p}</td><td>${f.dg > 0 ? '+' + f.dg : f.dg}</td><td class="pts">${f.pts}</td></tr>`).join('')}
       </tbody></table></section>`;
   });
-  html += '<section class="seccion" aria-label="Goleadores"><h2>Goleadores</h2>';
+  html += '</div><section class="seccion goleadores-sec" aria-label="Goleadores"><h2>Goleadores</h2>';
   if (!D.goleadores.length) html += '<p class="nota">Todavía no hay goles.</p>';
   else {
     const [l, ...resto] = D.goleadores;
@@ -197,7 +202,7 @@ function vLlaves() {
   html += `<section class="campeon" aria-label="Campeón"><div class="copa" style="width:72px;height:72px;border-radius:20px;background:var(--acento);color:var(--fondo);display:flex;align-items:center;justify-content:center">${ICONOS.copa}</div>
     <span style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--acento)">CAMPEÓN</span>
     <span style="font-family:var(--titulo);font-weight:800;font-size:30px;text-transform:uppercase;color:${campeon ? 'var(--texto)' : 'var(--apagado)'}">${campeon ? esc(nombre(campeon)) : 'Por definir'}</span></section>`;
-  return html;
+  return '<div class="llaves-wrap">' + html + '</div>';
 }
 
 // Reloj: actualiza el minuto cada segundo sin recargar

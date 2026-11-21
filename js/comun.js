@@ -1,7 +1,19 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js?v=3';
 
-export const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+if (!SUPABASE_URL || SUPABASE_URL.includes('TU-PROYECTO') || !SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes('PEGA_AQUI')) {
+  throw new Error('Falta poner la URL y la key de Supabase en js/config.js (en GitHub).');
+}
+export const sb = createClient(SUPABASE_URL.trim().replace(/\/+$/, ''), SUPABASE_ANON_KEY.trim());
+
+// Traduce errores típicos a algo entendible
+export function explicarError(e) {
+  const m = (e && (e.message || e.details)) || String(e);
+  if (/does not exist|Could not find the table|schema cache|42P01|PGRST205/i.test(m)) return 'La base de datos no tiene las tablas. Corre el archivo supabase/01_esquema.sql en Supabase → SQL Editor.';
+  if (/Invalid API key|No API key|JWT|apikey/i.test(m)) return 'La key de js/config.js no es válida. Copia de nuevo la publishable key completa.';
+  if (/Failed to fetch|NetworkError|Load failed/i.test(m)) return 'No hay conexión con Supabase. Revisa internet y que la URL de js/config.js esté bien escrita.';
+  return m;
+}
 
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
