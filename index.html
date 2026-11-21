@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070C18">
+<meta name="description" content="Marcador en vivo, tabla de posiciones, goleadores y llaves de la Copa Decembrina de Hinchas en Tesalia, Huila.">
+<meta property="og:title" content="Copa Decembrina de Hinchas · En vivo">
+<meta property="og:description" content="Sigue los partidos en vivo desde la Cancha Olímpica de Tesalia.">
+<title>Copa Decembrina de Hinchas · En vivo</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%2338D9FF'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+<div class="app">
+  <header class="cabecera">
+    <div class="fila">
+      <span class="marca" id="marca">Copa Decembrina</span>
+      <button class="icono-btn" id="compartir" aria-label="Compartir enlace"></button>
+    </div>
+    <h1 id="titulo">En vivo</h1>
+    <p class="sub" id="sede">Cancha Olímpica de Fútbol 11 · Tesalia, Huila</p>
+  </header>
+  <main class="contenido" id="vista" aria-live="polite">
+    <p class="vacio">Cargando…</p>
+  </main>
+  <nav class="nav" aria-label="Secciones" id="nav">
+    <a href="#vivo" data-ruta="vivo"><span data-ic="vivo"></span>En vivo</a>
+    <a href="#posiciones" data-ruta="posiciones"><span data-ic="tabla"></span>Posiciones</a>
+    <a href="#llaves" data-ruta="llaves"><span data-ic="llaves"></span>Llaves</a>
+  </nav>
+</div>
+<script type="module" src="js/publico.js"></script>
+</body>
+</html>
