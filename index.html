@@ -11,13 +11,13 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%2338D9FF'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/estilos.css?v=1.4">
+<link rel="stylesheet" href="css/estilos.css?v=1.5">
 </head>
 <body>
 <div class="app">
   <header class="cabecera">
     <div class="fila">
-      <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="marca" id="marca">Copa Decembrina</span><span class="version">v1.4</span></span>
+      <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="marca" id="marca">Copa Decembrina</span><span class="version">v1.5</span></span>
       <button class="icono-btn" id="compartir" aria-label="Compartir enlace"></button>
     </div>
     <h1 id="titulo">En vivo</h1>
@@ -26,10 +26,11 @@
   <main class="contenido" id="vista" aria-live="polite">
     <p class="vacio">Cargando…</p>
   </main>
-  <footer class="pie">Copa Decembrina de Hinchas · Tesalia · <b>versión 1.4</b></footer>
-  <nav class="nav" aria-label="Secciones" id="nav">
+  <footer class="pie">Copa Decembrina de Hinchas · Tesalia · <b>versión 1.5</b> · <a href="#tv">Modo pantalla grande</a></footer>
+  <nav class="nav" aria-label="Secciones" id="nav" style="--cols:4">
     <a href="#vivo" data-ruta="vivo"><span data-ic="vivo"></span>En vivo</a>
     <a href="#posiciones" data-ruta="posiciones"><span data-ic="tabla"></span>Posiciones</a>
+    <a href="#estadisticas" data-ruta="estadisticas"><span data-ic="estadisticas"></span>Estadísticas</a>
     <a href="#llaves" data-ruta="llaves"><span data-ic="llaves"></span>Llaves</a>
   </nav>
 </div>
@@ -39,6 +40,6 @@
   window.addEventListener('error',function(e){copaFallo(e.message||'Error al cargar los archivos');});
   window.addEventListener('unhandledrejection',function(e){copaFallo((e.reason&&e.reason.message)||e.reason);});
 </script>
-<script type="module" src="js/publico.js?v=1.4"></script>
+<script type="module" src="js/publico.js?v=1.5"></script>
 </body>
 </html>

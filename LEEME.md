@@ -1,4 +1,4 @@
-# Copa Decembrina de Hinchas · Tesalia · versión 1.4
+# Copa Decembrina de Hinchas · Tesalia · versión 1.5
 
 Web en vivo de la Copa (marcador con minuto, goles con autor, tarjetas, tabla, goleadores y llaves) y panel de administración para el planillero.
 
@@ -9,6 +9,26 @@ Web en vivo de la Copa (marcador con minuto, goles con autor, tarjetas, tabla, g
 - **Dueño:** projectspia1@gmail.com, que tiene todos los permisos y es el único que agrega, quita o cambia los permisos de los admins.
 
 En esta guía, cambia `copadecembrina` por el nombre que elijas en el paso 1 y `TU-PROYECTO` por el código que te dé Supabase en el paso 2.
+
+## ⬆️ Actualizar a la versión 1.5 (si ya tenías la 1.4 funcionando)
+
+1. En Supabase, en **SQL Editor → New query**, pega `supabase/05_version_1_5.sql` y dale **Run**. Si sale el aviso de RLS, elige "Run and enable RLS". El script no borra datos.
+2. En GitHub, en **Add file → Upload files**, sube todo el contenido del zip y dale **Commit changes**.
+3. Abre la página con **Ctrl + F5**. Arriba debe decir **v1.5**.
+
+### Novedades de la 1.5
+- **Suspensiones automáticas:** con roja, el jugador queda fuera N fechas, y cada K amarillas acumuladas le cuestan 1 fecha. N y K se configuran en Partidos → Torneo. En el planillero, el jugador suspendido sale bloqueado.
+- **Cambios:** tocas al jugador que sale, luego **Cambio**, y eliges quién entra.
+- **Estadísticas** (nueva pestaña pública): goleadores, valla menos vencida, suspendidos y juego limpio.
+- **Desempate configurable** en Partidos → Torneo.
+- **Compartir por WhatsApp:** un botón en el marcador manda el resultado con el link.
+- **Pantalla grande (TV):** botón en el marcador, o el link `…/#tv`. Para salir, tecla Esc.
+- **Cuenta regresiva** para los próximos partidos.
+- **Color de cada barra:** se elige en Equipos.
+- **Inscripción con documento y arquero:** el documento es privado (el público no lo ve) y no se puede repetir en dos barras.
+- **Quién cargó cada jugada:** aparece en Registradas y en Reportes.
+- **Reportes → Descargar Excel:** tabla, goleadores, partidos, jugadas, suspendidos, juego limpio y valla.
+- **Patrocinadores:** se agregan en Reportes, subiendo el logo o pegando su link. Salen en la página pública y en la pantalla grande.
 
 ---
 
@@ -111,6 +131,8 @@ js/admin.js             Lógica del panel
 supabase/01_esquema.sql      Tablas, permisos, reglas y tiempo real (correr 1 vez)
 supabase/02_datos_ejemplo.sql Datos de prueba (opcional)
 supabase/03_limpiar_torneo.sql Borra datos del torneo (no toca admins)
+supabase/04_permisos_api.sql  Arreglo de permisos de la API (ya incluido en 01)
+supabase/05_version_1_5.sql   Actualización a la versión 1.5 (ya incluida en 01)
 ```
 
 ## Bueno saber
