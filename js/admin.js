@@ -1,4 +1,4 @@
-import { sb, esc, sincronizarHora, segundos, minuto, mmss, fmtFecha, fmtHora, desdeLocal, aLocal, PERIODOS, FASES, ganador, perdedor, agruparTabla, ICONOS, iconoJugada, TEXTO_JUGADA, aviso, debounce, explicarError } from './comun.js?v=3';
+import { sb, esc, sincronizarHora, segundos, minuto, mmss, fmtFecha, fmtHora, desdeLocal, aLocal, PERIODOS, FASES, ganador, perdedor, agruparTabla, ICONOS, iconoJugada, TEXTO_JUGADA, aviso, debounce, explicarError } from './comun.js?v=1.3';
 
 const $vista = document.getElementById('vista');
 const $nav = document.getElementById('nav');

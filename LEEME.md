@@ -1,4 +1,4 @@
-# Copa Decembrina de Hinchas · Tesalia
+# Copa Decembrina de Hinchas · Tesalia · versión 1.3
 
 Web en vivo de la Copa (marcador con minuto, goles con autor, tarjetas, tabla, goleadores y llaves) y panel de administración para el planillero.
 

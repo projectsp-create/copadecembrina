@@ -1,4 +1,4 @@
-import { sb, esc, sincronizarHora, minuto, esHoy, fmtHora, fmtFecha, PERIODOS, ganador, agruparTabla, ICONOS, iconoJugada, TEXTO_JUGADA, debounce, aviso, explicarError } from './comun.js?v=3';
+import { sb, esc, sincronizarHora, minuto, esHoy, fmtHora, fmtFecha, PERIODOS, ganador, agruparTabla, ICONOS, iconoJugada, TEXTO_JUGADA, debounce, aviso, explicarError } from './comun.js?v=1.3';
 
 const D = { config: null, equipos: new Map(), partidos: [], tabla: [], goleadores: [], eventos: [], destacado: null };
 const $vista = document.getElementById('vista');

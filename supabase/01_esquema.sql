@@ -322,4 +322,25 @@ begin
   end loop;
 end $$;
 
+-- ---------- 8. ACCESO DE LA API (proyectos nuevos no lo dan solo) ------
+grant usage on schema public to anon, authenticated;
+
+grant select on public.copa_config, public.copa_equipos, public.copa_jugadores,
+               public.copa_partidos, public.copa_eventos,
+               public.copa_tabla, public.copa_goleadores to anon, authenticated;
+
+grant select, insert, update, delete on public.copa_config, public.copa_admins, public.copa_equipos,
+               public.copa_jugadores, public.copa_partidos, public.copa_eventos to authenticated;
+
+grant usage, select on all sequences in schema public to authenticated;
+
+grant execute on function public.copa_ahora() to anon, authenticated;
+grant execute on function public.copa_puede(text) to anon, authenticated;
+grant execute on function public.copa_es_dueno() to anon, authenticated;
+grant execute on function public.copa_email() to anon, authenticated;
+grant execute on function public.copa_reloj(bigint, text, int) to authenticated;
+
+-- Que la API vea los cambios de inmediato
+notify pgrst, 'reload schema';
+
 -- Listo. Siguiente (opcional): 02_datos_ejemplo.sql para probar con equipos de mentira.

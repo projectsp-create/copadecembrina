@@ -20,7 +20,7 @@
   --titulo: 'Barlow Condensed', system-ui, sans-serif;
 }
 * { box-sizing: border-box; }
-html, body { margin: 0; background: var(--fondo-2); color: var(--texto); font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+html, body { margin: 0; background: var(--fondo); color: var(--texto); font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 body { min-height: 100vh; }
 a { color: var(--acento); text-decoration: none; }
 button, input, select, textarea { font: inherit; color: inherit; }
@@ -38,7 +38,7 @@ h1 { font-weight: 800; font-size: 34px; line-height: 1; }
 h2 { font-weight: 700; font-size: 20px; letter-spacing: 1px; }
 h3 { font-weight: 700; font-size: 17px; letter-spacing: .5px; }
 .sub { margin: 0; font-size: 13px; color: var(--gris); }
-.contenido { padding: 18px 16px 110px; display: flex; flex-direction: column; gap: 18px; flex: 1; }
+.contenido { padding: 18px 16px 24px; display: flex; flex-direction: column; gap: 18px; flex: 1; }
 .seccion { display: flex; flex-direction: column; gap: 10px; }
 .tarjeta { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 18px; }
 .tarjeta.pad { padding: 14px; }
@@ -216,13 +216,14 @@ details.equipo .cuerpo { padding: 0 14px 16px; display: flex; flex-direction: co
 
 /* ---------- PC / tablet horizontal ---------- */
 @media (min-width: 900px) {
-  .app { max-width: 1240px; box-shadow: 0 0 0 1px var(--borde); }
-  .cabecera { padding: 28px 36px 22px; order: 0; }
+  :root { --margen-pc: max(36px, calc((100vw - 1320px) / 2)); }
+  .app { max-width: none; }
+  .cabecera { padding: 28px var(--margen-pc) 22px; order: 0; }
   h1 { font-size: 44px; }
   .nav { order: 1; position: sticky; top: 0; bottom: auto; left: auto; transform: none; max-width: none;
-    display: flex; gap: 8px; padding: 10px 36px; border-top: none; border-bottom: 1px solid var(--borde); }
+    display: flex; gap: 8px; padding: 10px var(--margen-pc); border-top: none; border-bottom: 1px solid var(--borde); }
   .nav a, .nav button { flex-direction: row; gap: 8px; padding: 10px 18px; font-size: 14px; }
-  .contenido { order: 2; padding: 28px 36px 56px; gap: 24px; }
+  .contenido { order: 2; padding: 28px var(--margen-pc) 56px; gap: 24px; }
   .dos-col { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 28px; align-items: start; }
   .grupos-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
   .goleadores-sec { max-width: 720px; }
@@ -239,7 +240,13 @@ details.equipo .cuerpo { padding: 0 14px 16px; display: flex; flex-direction: co
   .acciones { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .aviso { bottom: 32px; }
 }
-@media (min-width: 900px) { .app.admin { max-width: 1040px; } }
+@media (min-width: 900px) { .app.admin { --margen-pc: max(36px, calc((100vw - 1080px) / 2)); } }
 @media (min-width: 1200px) {
   .plantilla { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
+
+/* Pie con versión */
+.pie { padding: 8px 16px calc(100px + env(safe-area-inset-bottom)); text-align: center; font-size: 12px; color: var(--gris); }
+.pie b { color: var(--acento); font-weight: 700; }
+@media (min-width: 900px) { .pie { order: 3; padding: 18px var(--margen-pc) 28px; border-top: 1px solid var(--borde); } }
+.version { font-size: 11px; font-weight: 700; color: var(--acento); border: 1px solid var(--acento-borde); border-radius: 999px; padding: 2px 8px; }
